@@ -2,6 +2,11 @@
 
 **[Open the live dashboard →](https://sustainableos.international/app/climate_profile_cambodia.html)**
 
+*A mirror of this dashboard is also available on
+[GitHub Pages](https://richardtc.github.io/climate_profile_cambodia/) — the
+version above is the primary, actively maintained site; the GitHub Pages
+copy may occasionally lag behind if the two aren't updated together.*
+
 An interactive, open-source climate dashboard for Cambodia, presenting historical
 climate baselines and future projections as ready-to-use maps and charts. Built
 for climate practitioners and non-specialist stakeholders — government agencies,
