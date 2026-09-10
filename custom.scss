@@ -1,0 +1,531 @@
+/*-- scss:defaults --*/
+
+$navy: #0f2530;
+$navy-2: #16333f;
+$paper: #eef1ea;
+$ink: #16232b;
+$water: #2f7ea8;
+$temp: #e6550d;
+$danger: #980002;
+$warn: #c98a2e;
+
+$body-bg: $paper;
+$body-color: $ink;
+
+$navbar-bg: $navy;
+$navbar-fg: #eef1ea;
+
+$font-family-sans-serif: "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+/*-- scss:rules --*/
+
+// Sidebar — dark navy, matching the mockup
+.sidebar,
+.quarto-dashboard .bslib-sidebar-layout > .sidebar,
+#quarto-margin-sidebar {
+  background-color: $navy-2 !important;
+  color: #eef1ea;
+
+  a { color: #bfe0ee; }
+
+  h4, .card-title {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: rgba(238, 241, 234, 0.62);
+    font-weight: 600;
+  }
+}
+
+// Value boxes are now styled directly in R via bslib::value_box_theme()
+// (see the R chunk in the .qmd) — no CSS needed here for them.
+
+// Sidebar layer tree — plain HTML <details>/<summary>, no JS library
+.layer-tree {
+  margin-bottom: 18px;
+
+  details {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 0;
+  }
+
+  summary {
+    cursor: pointer;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: #eef1ea;
+    list-style: revert;
+  }
+
+  // Nested subgroup (e.g. Temperature / Precipitation within Historical baseline)
+  details.subgroup {
+    margin-left: 14px;
+    padding: 4px 0;
+    border-bottom: none;
+
+    summary {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: rgba(238, 241, 234, 0.55);
+      letter-spacing: 0.04em;
+    }
+
+    label { padding-left: 30px; }
+
+    // A subgroup nested inside another subgroup (e.g. Temperature /
+    // Precipitation within SSP5-8.5, 2061–2080) — brighten back up
+    // to match the topmost tree items, so it doesn't read as dimmer
+    // than its siblings elsewhere in the tree just because it sits
+    // one level deeper here.
+    details.subgroup summary {
+      color: #eef1ea;
+    }
+  }
+
+  // Scenario-level titles (SSP5-8.5, 2061–2080 / SSP2-4.5, 2041–2060)
+  // — same brightness as the topmost tree items.
+  details.scenario-group > summary {
+    color: #eef1ea;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: rgba(238, 241, 234, 0.75);
+    padding: 4px 0 4px 18px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 6px;
+  }
+
+  label.unavailable {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  label.unavailable input[type="checkbox"] {
+    cursor: not-allowed;
+  }
+}
+
+// Tabset navigation — underline style, not pill/box tabs
+.nav-tabs {
+  border-bottom: 1px solid rgba(15, 35, 43, 0.12);
+
+  .nav-link {
+    font-weight: 600;
+    font-size: 13px;
+    color: #6b7a72;
+    border: none;
+    border-bottom: 2px solid transparent;
+
+    &.active {
+      color: $ink;
+      background: transparent;
+      border-bottom: 2px solid $water;
+    }
+  }
+}
+
+// Cards — subtle border instead of heavy shadow
+.card {
+  border: 1px solid rgba(15, 35, 43, 0.1);
+  box-shadow: none;
+}
+
+// Raster legends start hidden — JS toggles display on the matching
+// legend when its raster's sidebar checkbox is checked. Structure is
+// self-authored (see make_raster_legend() in the .qmd), so every class
+// below is known exactly — no guessing at Leaflet's own markup.
+
+.leaflet-image-layer {
+  image-rendering: pixelated;
+}
+
+.raster-opacity-control {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  font-size: 12px;
+  color: #0f2530;
+
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 140px;
+  }
+}
+
+.raster-legend {
+  display: none;
+  background: rgba(255, 255, 255, 0.92) !important;
+  padding: 10px 14px;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  font-size: 12px;
+  color: #0f2530 !important;
+  // Keeps the card from ballooning to fit a long single-line title —
+  // width now tracks the bar+units content, not the header text.
+  max-width: 210px;
+
+  .legend-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    // Cap header width at ~1.5x the bar+units column so long titles
+    // wrap onto multiple lines instead of stretching the card.
+    max-width: 130px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.25;
+  }
+
+  .legend-body {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .legend-bar {
+    width: 24px;
+    height: 130px;
+    border: 1px solid rgba(15, 37, 48, 0.3);
+  }
+
+  .legend-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 8px;
+    font-weight: 600;
+  }
+}
+
+// Zoom level + cursor coordinates readout — same card treatment as
+// .raster-opacity-control, stacked top-left under Leaflet's zoom
+// control and the measure tool.
+.map-status-control {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  font-size: 11.5px;
+  color: #0f2530;
+  line-height: 1.5;
+
+  span {
+    display: block;
+    white-space: nowrap;
+  }
+}
+
+// leaflet-measure's own control — restyle its default blue to match
+// the dashboard's palette instead of the plugin's stock colors.
+.leaflet-control-measure {
+  a.leaflet-control-measure-toggle {
+    background-color: rgba(255, 255, 255, 0.92);
+    color: #0f2530;
+  }
+}
+
+// Provincial tab data tables — compact display: ~1/3 smaller text,
+// tighter row spacing. Scoped to these two tables only (via the
+// "provincial-table" class passed to DT::datatable) so it doesn't
+// affect anything else in the dashboard.
+table.provincial-table {
+  font-size: 0.67em;
+
+  thead th, tbody td {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    line-height: 1.15;
+  }
+}
+
+// National metrics tab's two summary tables — only 2 data rows each,
+// but were needing a scrollbar to see both. Same compact-text
+// approach as provincial-table above, scoped separately since these
+// two tables use a different class.
+table.national-metrics-table {
+  font-size: 0.8em;
+
+  thead th, tbody td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    line-height: 1.2;
+  }
+}
+
+// About tab — denser text so both cards fit within the row without
+// scrolling, even if layout-ncol columns collapse to stacked on a
+// narrower viewport (scrolling: false means anything overflowing the
+// row is otherwise clipped rather than scrollable).
+.about-card {
+  font-size: 0.85em;
+  line-height: 1.35;
+
+  p { margin-bottom: 0.5em; }
+}
+
+// Thinner sidebar scrollbar — native colors, just a slimmer width.
+#bslib-sidebar-1 {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+// Sidebar collapse-toggle arrow — default renders as a plain black
+// glyph on a light background, easy to miss. Give it a navy circular
+// background (matching the sidebar) and a white icon so it reads as
+// an intentional control.
+.collapse-toggle {
+  background-color: #0f2530 !important;
+  color: #eef1ea !important;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg, i {
+    color: #eef1ea !important;
+    fill: #eef1ea !important;
+  }
+}
+
+// "Data selection" heading above the layer tree — matches the
+// uppercase, letter-spaced style already used for the tree's own
+// top-level section headers.
+.data-selection-title {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: #eef1ea;
+  font-size: 11.5px;
+  margin-bottom: 8px;
+}
+
+// Print-map control — plain button, same treatment as the other
+// custom Leaflet controls (measure, status box).
+.print-map-control {
+  background-color: #fff;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    text-decoration: none;
+    color: #0f2530;
+
+    svg { width: 16px; height: 16px; }
+  }
+}
+
+// Reset-view control — same treatment as the print button.
+.reset-view-control {
+  background-color: #fff;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    text-decoration: none;
+    color: #0f2530;
+
+    svg { width: 16px; height: 16px; }
+  }
+}
+
+// Print view — hide everything except the map itself (tiles, raster/
+// choropleth layer, and the active legend), for a clean printout from
+// the Map viewer tab. Sweeps visibility off the whole page, then
+// re-shows only .leaflet-container and its contents, then hides the
+// specific in-map controls (zoom, layers, measure, opacity, status
+// box, the print button itself, attribution) that would otherwise
+// print along with the map.
+@media print {
+  // Landscape by default — most browsers treat this as the initial
+  // orientation in the print dialog rather than a hard override, so
+  // it can still be changed there if needed.
+  @page {
+    size: landscape;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+  .leaflet-container, .leaflet-container * {
+    visibility: visible;
+
+    // Browsers strip background colors/gradients from print output by
+    // default (to save ink) unless told otherwise — this is why the
+    // legend's gradient bar was printing blank. Forces it to print as
+    // shown on screen.
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  .leaflet-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    // Reserve a strip at the bottom for the breadcrumb + citation bars
+    // below (32px + up to ~34px for the wrapped citation text).
+    height: calc(100vh - 76px) !important;
+  }
+  .leaflet-control-zoom,
+  .leaflet-control-layers,
+  .leaflet-control-measure,
+  .raster-opacity-control,
+  .map-status-control,
+  .print-map-control,
+  .reset-view-control {
+    display: none !important;
+  }
+  // Breadcrumb (e.g. "Data selection > Historical baseline >
+  // Temperature > Mean") — docked as its own bar below the map,
+  // rather than a Leaflet control overlapping map content. Sits above
+  // the citation bar (below).
+  .print-breadcrumb-control {
+    display: flex !important;
+    visibility: visible !important;
+    align-items: center;
+    position: fixed !important;
+    bottom: 44px;
+    left: 0;
+    width: 100vw;
+    height: 32px;
+    background: #fff;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0f2530;
+    box-sizing: border-box;
+  }
+  // Citation — hidden on screen (rule below), shown only here.
+  // Bottom-most bar, beneath the map and the breadcrumb. Long enough
+  // to wrap onto two lines, so height is auto (via padding) rather
+  // than fixed, unlike the shorter breadcrumb bar above.
+  .print-citation-control, .print-citation-control * {
+    visibility: visible !important;
+  }
+  .print-citation-control {
+    display: block !important;
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    padding: 4px 12px;
+    font-size: 12px !important;
+    line-height: 1.3;
+    color: #0f2530;
+    background: #fff;
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+
+    a, em {
+      font-size: inherit !important;
+    }
+    a {
+      color: #0f2530 !important;
+      text-decoration: underline;
+    }
+  }
+}
+
+// Print breadcrumb — hidden on screen; only shown via the @media
+// print override above.
+.print-breadcrumb-control {
+  display: none;
+}
+
+// Print citation — hidden on screen; only shown via the @media print
+// override above.
+.print-citation-control {
+  display: none;
+}
+
+// Province name labels — textOnly markers have no background, so a
+// white halo keeps them legible over both light and dark raster
+// colors underneath.
+.province-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0f2530;
+  text-shadow:
+    -1px -1px 0 #fff, 1px -1px 0 #fff,
+    -1px 1px 0 #fff, 1px 1px 0 #fff,
+    0 0 3px #fff;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+// The whole tabset (## Row {.tabset}) is itself wrapped in one outer
+// card by Quarto — confirmed via DevTools:
+// <div class="card tabset bslib-card" data-full-screen="false">.
+// This is a documented, currently-unfixable-via-markup Quarto
+// limitation (tabs auto-become expandable cards). The "tabset" class
+// is unique to this outer wrapper — no individual chart card has it —
+// so this selector hides only its expand button, leaving every real
+// chart's own button untouched.
+.card.tabset > bslib-tooltip .bslib-full-screen-enter {
+  display: none !important;
+}
+
+// GCM ensemble tab's two charts — expand adds little value here since
+// they're already sized reasonably in the 2-column layout. Backup CSS
+// in case expandable="false" (set on these two cards in the qmd)
+// doesn't reliably remove the button element itself, same as the
+// confirmed Quarto behavior seen elsewhere in this file.
+.card.no-expand > bslib-tooltip .bslib-full-screen-enter {
+  display: none !important;
+}
+
+// National metrics tab's 4 headline stats — plain .card divs styled
+// to look like colored stat boxes, rather than bslib's value_box()
+// component (which had genuine structural issues in this file: it
+// got mis-promoted into its own tabs, and — separately — a "::"
+// inside an inline `{r}` expression broke Pandoc's div-boundary
+// parsing). Plain cards have no such special content-splitting
+// logic, so this is just ordinary CSS on ordinary card content.
+.stat-card {
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 1.25rem;
+  min-height: 110px;
+
+  .stat-label {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-number {
+    font-size: 1.9rem;
+    font-weight: 600;
+  }
+}
+
+.stat-card-primary { background-color: #4a90d2; }
+.stat-card-info    { background-color: #a97fc4; }
+.stat-card-danger  { background-color: #e91e63; }
+.stat-card-warning { background-color: #f5821f; }
