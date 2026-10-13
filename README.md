@@ -54,11 +54,22 @@ from the dashboard are used in a publication.
 
 ## License
 
-This work is licensed under a
-[Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)
-(CC BY 4.0). You are free to share and adapt this material for any purpose,
-provided you give appropriate credit to Richard T. Cooper. See [LICENSE](LICENSE)
-for the full notice.
+This repository is dual-licensed:
+
+| What | Licence |
+|---|---|
+| **Code** — R scripts, Quarto/QMD source, SCSS, JavaScript and other software files | [MIT License](https://opensource.org/license/mit) |
+| **Content** — text, documentation, figures, tables, maps and derived data products created by the author | [Creative Commons Attribution 4.0 International (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/) |
+
+Under MIT, you may use, copy, modify and redistribute the code freely, provided
+the copyright notice and licence text are kept with it. Under CC BY 4.0, you are
+free to share and adapt the content for any purpose, provided you give
+appropriate credit to Richard T. Cooper, link to the licence, and indicate if
+changes were made. See [LICENSE](LICENSE) for the full notice.
+
+Third-party input data (WorldClim, CMIP6, GADM, SRTM, OpenStreetMap) are **not**
+covered by this licence and remain subject to their own terms — see
+[Data sources](#data-sources).
 
 ## About
 
